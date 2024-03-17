@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CookIt</string>
+    <string name="id_agregarReceta">Agregar Receta</string>
+</resources>
