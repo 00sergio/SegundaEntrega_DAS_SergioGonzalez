@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+    <resources>
+        <color android:name="color" tools:ignore="ExtraText">#800080</color>
+        <!-- Otros colores -->
+    </resources>
+
+</selector>
