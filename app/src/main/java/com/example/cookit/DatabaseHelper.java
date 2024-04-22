@@ -1,6 +1,5 @@
 package com.example.cookit;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -15,8 +14,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_RECIPES = "recipes";
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_NAME = "name";
-
     private static final String COLUMN_INGREDIENTS = "ingredientes";
+
+    // User table
+    private static final String TABLE_USERS = "users";
+    private static final String COLUMN_USERNAME = "username";
+    private static final String COLUMN_PASSWORD = "password";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -29,12 +32,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_NAME + " TEXT,"
                 + COLUMN_INGREDIENTS + " TEXT)";
         db.execSQL(CREATE_RECIPES_TABLE);
-    }
 
+        String CREATE_USERS_TABLE = "CREATE TABLE " + TABLE_USERS + "("
+                + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + COLUMN_USERNAME + " TEXT,"
+                + COLUMN_PASSWORD + " TEXT)";
+        db.execSQL(CREATE_USERS_TABLE);
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_RECIPES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
         onCreate(db);
     }
 
@@ -44,7 +53,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_NAME, name);
         values.put(COLUMN_INGREDIENTS, ing);
         long id = db.insert(TABLE_RECIPES, null, values);
-
+        db.close();
         return id;
     }
 
@@ -55,7 +64,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_INGREDIENTS, receta.getIngredientes());
         int rowsAffected = db.update(TABLE_RECIPES, values, COLUMN_ID + " = ?",
                 new String[]{String.valueOf(receta.getId())});
-
+        db.close();
         return rowsAffected;
     }
 
@@ -63,10 +72,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_RECIPES, COLUMN_ID + " = ?",
                 new String[]{String.valueOf(recipeId)});
-
+        db.close();
     }
 
-    @SuppressLint("Range")
     public List<Receta> getAllRecipes() {
         List<Receta> recipeList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -93,6 +101,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return recipeList;
     }
 
+    // Métodos para la gestión de usuarios
 
+    public long addUser(String username, String password) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_USERNAME, username);
+        values.put(COLUMN_PASSWORD, password);
+        long id = db.insert(TABLE_USERS, null, values);
+        db.close();
+        return id;
+    }
 
+    public boolean checkUser(String username, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_USERS, new String[]{COLUMN_ID},
+                COLUMN_USERNAME + " = ? AND " + COLUMN_PASSWORD + " = ?",
+                new String[]{username, password}, null, null, null);
+        int count = cursor.getCount();
+        cursor.close();
+        db.close();
+        return count > 0;
+    }
 }

@@ -1,5 +1,7 @@
 package com.example.cookit;
 
+
+
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -13,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -21,6 +24,8 @@ public class RecetaAdapter extends RecyclerView.Adapter<RecetaAdapter.RecipeView
 
     private List<Receta> recipeList;
     private OnItemClickListener mListener;
+    private static final String CHANNEL_ID = "CookItChannel";
+
 
     public interface OnItemClickListener {
         void onEditClick(int position);
@@ -63,6 +68,7 @@ public class RecetaAdapter extends RecyclerView.Adapter<RecetaAdapter.RecipeView
         Button buttonEdit;
         Button buttonDelete;
 
+
         RecipeViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
             recipeNameTextView = itemView.findViewById(R.id.recipe_name);
@@ -95,6 +101,28 @@ public class RecetaAdapter extends RecyclerView.Adapter<RecetaAdapter.RecipeView
             });
 
         }
+    }
+    private void sendNotification(Context context, String recipeName) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
+                    "CookIt Notifications",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setContentTitle("Nueva Receta Agregada")
+                .setContentText("Se ha agregado una nueva receta: " + recipeName)
+                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .setAutoCancel(true);
+
+        notificationManager.notify(0, builder.build());
+    }
+
+    public void showAddRecipeDialog(Context context, String recipeName) {
+        sendNotification(context, recipeName);
     }
 }
 

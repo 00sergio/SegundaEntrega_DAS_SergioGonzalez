@@ -1,17 +1,26 @@
 package com.example.cookit;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
@@ -27,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Receta> recipeList;
     private DatabaseHelper databaseHelper;
     private String idioma = "es";
+    private static final String CHANNEL_ID = "RecetaChannel";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +73,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         recipeAdapter.setOnItemClickListener(new RecetaAdapter.OnItemClickListener() {
             @Override
             public void onEditClick(int position) {
                 showEditRecetaDialog(position);
+
             }
 
             @Override
@@ -83,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 changeLanguage("eu");
+
             }
         });
 
@@ -145,8 +158,9 @@ public class MainActivity extends AppCompatActivity {
                             receta.setId((int) recId);
                             recipeList.add(receta);
                             recipeAdapter.notifyDataSetChanged();
+                            showNotification();
                         } else {
-                            Toast.makeText(MainActivity.this, "Ingrese el nombre de la receta", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Ingrese el nombre y los ingredientes de la receta", Toast.LENGTH_SHORT).show();
                         }
                     }
                 })
@@ -208,6 +222,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 borrarReceta(position);
+                showNotification();
             }
         });
         builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -229,6 +244,27 @@ public class MainActivity extends AppCompatActivity {
         recipeAdapter.notifyItemRemoved(position);
         Toast.makeText(this, "Receta eliminada", Toast.LENGTH_SHORT).show();
     }
+
+    private void showNotification() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.VIBRATE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.VIBRATE}, 11);
+        } else {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_launcher_background)
+                    .setContentTitle("Nueva Receta Agregada")
+                    .setContentText("Se ha agregado una nueva receta a la lista.")
+                    .setVibrate(new long[]{0, 1000, 500, 1000})
+                    .setAutoCancel(true);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Recetas", NotificationManager.IMPORTANCE_DEFAULT);
+                notificationManager.createNotificationChannel(channel);
+            }
+            notificationManager.notify(0, builder.build());
+        }
+    }
+
 }
 
 
