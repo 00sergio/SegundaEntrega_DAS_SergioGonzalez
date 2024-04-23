@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 borrarReceta(position);
-                showNotification();
+
             }
         });
         builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -246,8 +246,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showNotification() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.VIBRATE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.VIBRATE}, 11);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 11);
         } else {
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)

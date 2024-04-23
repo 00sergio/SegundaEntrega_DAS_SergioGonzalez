@@ -115,7 +115,7 @@ public class RecetaAdapter extends RecyclerView.Adapter<RecetaAdapter.RecipeView
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle("Nueva Receta Agregada")
                 .setContentText("Se ha agregado una nueva receta: " + recipeName)
-                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .setSmallIcon(R.drawable.ic_stat_ic_notification)
                 .setAutoCancel(true);
 
         notificationManager.notify(0, builder.build());

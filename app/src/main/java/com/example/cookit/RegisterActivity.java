@@ -45,7 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
         String contrasena = editTextContrasena.getText().toString();
 
         // Enviar solicitud al servidor para registrar el usuario
-        String url = "http://35.223.65.65:81/registro.php"; // URL del script para procesar el registro
+        String url = "http://34.66.46.125:81/registro.php"; // URL del script para procesar el registro
         String parametros = "usuario=" + Uri.encode(usuario) + "&contrasena=" + Uri.encode(contrasena);
 
         // Ejecutar la tarea asíncrona para enviar la solicitud
@@ -97,6 +97,7 @@ public class RegisterActivity extends AppCompatActivity {
             return respuesta;
         }
 
+        // Después de registrar el usuario exitosamente
         @Override
         protected void onPostExecute(String respuesta) {
             // Mostrar el mensaje de confirmación
@@ -109,5 +110,6 @@ public class RegisterActivity extends AppCompatActivity {
                 finish(); // Finalizar la actividad actual para que el usuario no pueda volver atrás
             }
         }
+
     }
 }
