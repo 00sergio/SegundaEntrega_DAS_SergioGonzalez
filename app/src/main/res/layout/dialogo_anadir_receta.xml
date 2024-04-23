@@ -3,6 +3,17 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <ImageView
+        android:id="@+id/imageViewCaptured"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        android:layout_gravity="right|center"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"/>
+
+
     <EditText
         android:id="@+id/recipeNameEditText"
         android:layout_width="match_parent"
@@ -14,6 +25,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Ingredientes" />
+
+    <Button
+        android:id="@+id/fotoboton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sacar Foto" />
 
 
 
