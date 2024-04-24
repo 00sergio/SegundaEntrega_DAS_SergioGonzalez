@@ -256,12 +256,12 @@ public class MainActivity extends AppCompatActivity {
                     imagen = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
                 } else {
                     // Si la conexión no fue exitosa, manejar el error adecuadamente
-                    Log.d("Error", "Imagen no recibida correctamente");
+                    Log.d("Error", "Imagen no recibida");
                 }
 
                 conexion.disconnect();
             } catch (Exception e) {
-                Log.e("Error", "Error al recuperar la imagen: " + e.getMessage());
+                Log.e("Error", "Error al recuperar : " + e.getMessage());
             }
 
             return imagen;
@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
                 mostrarImagen(imagen);
             } else {
                 // Si no se pudo obtener la imagen, mostrar una imagen por defecto o manejar el error
-                Log.e("Error", "No se pudo obtener la imagen o la imagen recibida es nula");
+                Log.e("Error", "No se pudo obtener la imagen");
             }
         }
     }
@@ -289,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
                     byte[] fototransformada = stream.toByteArray();
                     foto_base64 = Base64.encodeToString(fototransformada,Base64.DEFAULT);
                 } else {
-                    Log.d("TakenPicture", "No photo taken");
+                    Log.d("Foto", "No foto");
                 }
             });
 
@@ -299,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Dentro del método enviarDatos()
         String parametros = "recId=" + Uri.encode(String.valueOf(id)) + "&foto_base64=" + Uri.encode((foto));
-        Log.d("Datos enviados", parametros); // Imprime los datos enviados en el registro (Logcat)
+        Log.d("recibido", parametros); // Imprime los datos enviados en el registro (Logcat)
 
         // Ejecutar la tarea asíncrona
         new EnviarDatosTask().execute(url, parametros);
@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
                 // Obtener la respuesta del servidor (si es necesario)
                 int responseCode = conexion.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK) {
-                    Log.d("Bien", "Todo ok");
+                    Log.d("Bien", "Bien");
                 } else {
                     Log.d("Mal", "Algo no ok");
                 }

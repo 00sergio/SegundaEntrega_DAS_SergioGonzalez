@@ -5,21 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.util.Base64;
-import android.util.Log;
-import android.widget.ImageView;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,7 +91,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         String ing = cursor.getString(columnIngredientes);
                         Receta receta = new Receta(id,name,ing);
                         recipeList.add(receta);
-
                     } while (cursor.moveToNext());
                 }
             } finally {
@@ -117,28 +101,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return recipeList;
     }
 
-    // Métodos para la gestión de usuarios
-
-    public long addUser(String username, String password) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_USERNAME, username);
-        values.put(COLUMN_PASSWORD, password);
-        long id = db.insert(TABLE_USERS, null, values);
-        db.close();
-        return id;
-    }
-
-    public boolean checkUser(String username, String password) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_USERS, new String[]{COLUMN_ID},
-                COLUMN_USERNAME + " = ? AND " + COLUMN_PASSWORD + " = ?",
-                new String[]{username, password}, null, null, null);
-        int count = cursor.getCount();
-        cursor.close();
-        db.close();
-        return count > 0;
-    }
 
 
 }
